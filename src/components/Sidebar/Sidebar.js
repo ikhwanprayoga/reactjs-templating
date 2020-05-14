@@ -23,17 +23,11 @@ import { PropTypes } from "prop-types";
 
 // reactstrap components
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
   Collapse,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  FormGroup,
   Form,
   Input,
   InputGroupAddon,
@@ -45,8 +39,6 @@ import {
   NavItem,
   NavLink,
   Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col

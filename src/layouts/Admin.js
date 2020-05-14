@@ -23,6 +23,7 @@ import { Container } from "reactstrap";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
+import MahasiswaDetail from "../../src/views/admin/mahasiswa/MahasiswaDetail";
 
 import routes from "routes.js";
 
@@ -38,6 +39,7 @@ class Admin extends React.Component {
         return (
           <Route
             path={prop.layout + prop.path}
+            exact
             component={prop.component}
             key={key}
           />
@@ -66,7 +68,7 @@ class Admin extends React.Component {
           {...this.props}
           routes={routes}
           logo={{
-            innerLink: "/admin/index",
+            innerLink: "/admin/dashboard",
             imgSrc: require("assets/img/brand/argon-react.png"),
             imgAlt: "..."
           }}
@@ -78,7 +80,8 @@ class Admin extends React.Component {
           />
           <Switch>
             {this.getRoutes(routes)}
-            <Redirect from="*" to="/admin/index" />
+            <Route path="/admin/mahasiswa/:id" component={MahasiswaDetail}/>
+            <Redirect from="*" to="/admin/dashboard" />
           </Switch>
           <Container fluid>
             <AdminFooter />

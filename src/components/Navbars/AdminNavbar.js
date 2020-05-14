@@ -43,7 +43,7 @@ class AdminNavbar extends React.Component {
           <Container fluid>
             <Link
               className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
-              to="/"
+              to="#"
             >
               {this.props.brandText}
             </Link>
@@ -71,7 +71,7 @@ class AdminNavbar extends React.Component {
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
-                        Jessica Jones
+                        Ikhwan Prayoga
                       </span>
                     </Media>
                   </Media>
