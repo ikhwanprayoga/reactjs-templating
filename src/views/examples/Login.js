@@ -16,7 +16,8 @@
 
 */
 import React from "react";
-
+import { BehaviorSubject } from 'rxjs';
+import { Redirect } from "react-router-dom";
 // reactstrap components
 import {
   Button,
@@ -33,13 +34,64 @@ import {
   Col
 } from "reactstrap";
 
+import Axios from "axios";
+
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+
 class Login extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      baseUrl: 'http://localhost:8080',
+      formLogin: {
+        username: '',
+        password: ''
+      }
+    }
+    if (currentUserSubject._value) { 
+      this.props.history.push('/');
+    }
+  }
+
+  login = () => {
+    Axios.post(this.state.baseUrl+'/api/login/jwt', this.state.formLogin).then((result) => {
+      // console.log(result)
+  
+      if (result.data.token) {
+        localStorage.setItem('currentUser', JSON.stringify(result.data));
+        currentUserSubject.next(result.data);
+  
+        this.props.history.push('/')
+      }
+  
+      // return result;
+    }).catch((err) => {
+      console.log('err', err)
+      
+    });
+    // console.log('sign in')
+  }
+  
+  handleSignIn = () => {
+    this.login()
+  }
+
+  handleFormChange = (event) => {
+    let formNew = {...this.state.formLogin}
+    formNew[event.target.name] = event.target.value
+
+    this.setState({
+      formLogin: formNew
+    })
+  }
+
   render() {
     return (
       <>
         <Col lg="5" md="7">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
+            {/* <CardHeader className="bg-transparent pb-5">
               <div className="text-muted text-center mt-2 mb-3">
                 <small>Sign in with</small>
               </div>
@@ -73,7 +125,7 @@ class Login extends React.Component {
                   <span className="btn-inner--text">Google</span>
                 </Button>
               </div>
-            </CardHeader>
+            </CardHeader> */}
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
                 <small>Or sign in with credentials</small>
@@ -83,10 +135,16 @@ class Login extends React.Component {
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
-                        <i className="ni ni-email-83" />
+                        <i className="ni ni-single-02" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" autoComplete="new-email"/>
+                    <Input 
+                      placeholder="Username" 
+                      type="text" 
+                      name="username" 
+                      autoComplete="new-username"
+                      onChange={this.handleFormChange}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -96,7 +154,13 @@ class Login extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" autoComplete="new-password"/>
+                    <Input 
+                      placeholder="Password" 
+                      type="password" 
+                      name="password" 
+                      autoComplete="new-password"
+                      onChange={this.handleFormChange}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <div className="custom-control custom-control-alternative custom-checkbox">
@@ -113,7 +177,7 @@ class Login extends React.Component {
                   </label>
                 </div>
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button">
+                  <Button onClick={this.handleSignIn} className="my-4" color="primary" type="button">
                     Sign in
                   </Button>
                 </div>

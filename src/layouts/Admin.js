@@ -27,7 +27,22 @@ import MahasiswaDetail from "../../src/views/admin/mahasiswa/MahasiswaDetail";
 
 import routes from "routes.js";
 
+import { BehaviorSubject } from 'rxjs'
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')))
+
 class Admin extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      login: true
+    }
+    // if (!currentUserSubject._value) {
+    //   // return <Redirect from="*" to="/auth/login" />
+    //   this.props.history.push('/auth/login')
+    // }
+  }
+
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -62,6 +77,11 @@ class Admin extends React.Component {
     return "Brand";
   };
   render() {
+
+    // if (!currentUserSubject._value) {
+    //   return <Redirect from="*" to="/auth/login" />
+    // }
+
     return (
       <>
         <Sidebar
@@ -79,9 +99,12 @@ class Admin extends React.Component {
             brandText={this.getBrandText(this.props.location.pathname)}
           />
           <Switch>
-            {this.getRoutes(routes)}
+            {/* lis route */}
+            { 
+              this.getRoutes(routes)
+            }
             <Route path="/admin/mahasiswa/:id" component={MahasiswaDetail}/>
-            <Redirect from="*" to="/admin/dashboard" />
+            {/* <Redirect from="*" to="/admin/dashboard" /> */}
           </Switch>
           <Container fluid>
             <AdminFooter />

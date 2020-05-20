@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import CustomHeader from 'components/Headers/CustomHeader';
+import { Redirect } from "react-router-dom";
 // reactstrap components
 import {
     Card,
@@ -26,6 +27,9 @@ import 'react-notifications-component/dist/theme.css'
 import BootstrapTable from "react-bootstrap-table-next";
 import PaginationBSTable from '../../../components/Paginations/PaginationBSTable'
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+
+import { BehaviorSubject } from 'rxjs'
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')))
   
 const { SearchBar } = Search;
 
@@ -45,6 +49,9 @@ class Mahasiswa extends React.Component {
                 alamat: ''
             }
         }
+        // if (!currentUserSubject._value) {
+        //     this.props.history.push('/auth/login')
+        // }
     }
 
     setDefaultFormMahasiswa = () => {

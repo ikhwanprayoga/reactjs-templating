@@ -26,10 +26,13 @@ import 'react-notifications-component/dist/theme.css'
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import PaginationBSTable from '../../../components/Paginations/PaginationBSTable'
+import { BehaviorSubject } from 'rxjs'
 
 const { SearchBar } = Search;
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')))
 
 class Dosen extends React.Component {
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -42,8 +45,20 @@ class Dosen extends React.Component {
                 nama: '',
                 pangkat: '',
                 jabatanId: ''
+            },
+            // currentUser: currentUserSubject._value,
+            configHeader: {
+                headers: {
+                    Authorization: 'Bearer '+currentUserSubject._value.token
+                }
             }
         }
+        // if (currentUserSubject._value) { 
+        //     this.props.history.push('/');
+        // } else {
+        // this.props.history.push('/auth/login')
+        // }
+        
     }
 
     setDefaultFormDosen = () => {
@@ -60,7 +75,18 @@ class Dosen extends React.Component {
 
     //get data from api
     getDataApi = () => {
-        Axios.get(this.state.baseHost+'/api/dosen').then((res)=>{
+        // const configHeader = ''
+        // if (currentUserSubject._value) {
+        //     this.configHeader = {
+        //         headers: {
+        //             Authorization: 'Bearer '+this.state.currentUser.token
+        //         }
+        //     }
+        // }
+
+        console.log(this.state.configHeader)
+
+        Axios.get(this.state.baseHost+'/api/dosen', this.state.configHeader).then((res)=>{
             // console.log(res)
             this.setState({
                 dataDosen: res.data
@@ -254,6 +280,9 @@ class Dosen extends React.Component {
     }
 
     componentDidMount () {
+        if (!currentUserSubject._value) {
+            this.props.history.push('/auth/login')
+        }
         this.getDataApi()
         this.getDataJabatan()
     }
